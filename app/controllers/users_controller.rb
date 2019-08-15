@@ -1,4 +1,4 @@
-class UserController < ApplicationController
+class UsersController < ApplicationController
   def index
     @users = User.all
     render json: @users
@@ -20,6 +20,7 @@ class UserController < ApplicationController
 
   def login
     user = User.find_by(email: params[:email], password: params[:password])
+    
     if user
       render json: {access_token: JWT.encode(user, Rails.application.credentials.secret_key_base)}
     else
