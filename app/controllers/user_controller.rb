@@ -18,6 +18,15 @@ class UserController < ApplicationController
     end
   end
 
+  def login
+    user = User.find_by(email: params[:email], password: params[:password])
+    if user
+      render json: {access_token: JWT.encode(user, Rails.application.credentials.secret_key_base)}
+    else
+      render json: {status: 401, message:"認証失敗"}
+    end
+  end
+
   private
 
   def user_params
