@@ -33,6 +33,6 @@ module ApiPractice
     config.api_only = true
 
     # エラメの日本語化
-    config.i18n.default_local = :ja
+    config.i18n.default_locale = :ja
   end
 end
