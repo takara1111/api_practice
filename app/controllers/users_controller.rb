@@ -5,7 +5,7 @@ class UsersController < ApplicationController
   # curl -X POST --url http://localhost:3000/users --header 'Content-Type: application/json' -d '{"name": "test6", "email": "test7@test.com","password": "password"}'
 
   # ログイン
-  # curl --request POST --url http://localhost:3000/users/login --header 'Content-Type: application/json' --data '{"email":"test1@test.com","password": "password"}'
+  # curl --request POST --url http://localhost:3000/users/login --header 'Content-Type: application/json' --data '{"email":"User1@test.com","password": "password"}'
 
 # 一覧
   # curl --request GET --url http://localhost:3000/users --header 'Content-Type: application/json'
@@ -39,20 +39,14 @@ class UsersController < ApplicationController
     user = User.find_by(email: params[:email], password: params[:password])
     
     if user
-      render json: {access_token: JWT.encode(user, Rails.application.credentials.secret_key_base)}
+      user_data = { email: user.email, password: user.password }
+      render json: {access_token: JWT.encode(user_data, Rails.application.credentials.secret_key_base, "HS256")}
     else
       render json: {status: 401, message:"認証失敗"}
     end
   end
 
-  private
-
-    def authenticate
-      if request.headers["Authorization"].present?
-        token = request.headers['Authorization'].split(' ').last
-        @user = JWT.decode(token, Rails.application.credentials.secret_key_base)
-      end
-    end
+    private
 
     def user_params
       params.fetch(:user, {}).permit(:name, :description, :email, :password)
