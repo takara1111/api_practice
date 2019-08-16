@@ -5,5 +5,5 @@ end
 user = User.find(1)
 
 10.times do |t|
-  user.todos.create!("#{t+1}Todoテスト投稿", description: "#{t+1}テストdescription", user_id: user.id)
+  user.todos.create!(title: "#{t+1}Todoテスト投稿", description: "#{t+1}テストdescription", user_id: user.id)
 end
