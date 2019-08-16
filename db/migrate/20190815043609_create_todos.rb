@@ -4,8 +4,7 @@ class CreateTodos < ActiveRecord::Migration[5.2]
       t.string :title, null: false
       t.text :description
       t.integer :status, default: 0
-      # t.integer :user_id, null: false
-      t.references :user, foreign_key: true
+      t.integer :user_id, null: false
       t.timestamps
     end
   end
