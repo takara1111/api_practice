@@ -1,8 +1,8 @@
 class TodosController < ApplicationController
-  before_action :authenticate
+  before_action :authenticated_user
 
   def index
-    @todos = Todo.all
+    @todos = @authenticated_user.todos.all
     render json: @todos
   end
 
