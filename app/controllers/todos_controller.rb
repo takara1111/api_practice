@@ -28,6 +28,8 @@ class TodosController < ApplicationController
     private
 
     def todo_params
-      params.fetch(:todo, {}).permit(:title, :description, :status, :user_id)
+      raw_parameters = {title: params[:title], description: params[:description], user_id: @authenticated_user.id}
+      parameters = ActionContoller::Parameters.new(raw_parameters)
+      parameters.permit(:title, :description, :user_id)
     end
 end
