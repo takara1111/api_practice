@@ -8,6 +8,7 @@ class ApplicationController < ActionController::API
         token = request.headers['Authorization'].split(' ').last
         # @user = JWT.decode(token, Rails.application.credentials.secret_key_base, true, { algorithm: 'HS256' })[0]
         JWT.decode(token, Rails.application.credentials.secret_key_base, true, { algorithm: "HS256" })[0]
+        JWT.decode(token, Rails.application.credentials.secret_key_base,)[0]
       else
         render json: {status: 401, message: "ログインしろ"}
       end
@@ -16,5 +17,5 @@ class ApplicationController < ActionController::API
     def authenticated_user
       @authenticated_user = User.find_by(email: authenticate["email"])
     end
-    
+
 end

@@ -9,6 +9,11 @@ class TodosController < ApplicationController
   def show
     @todo = Todo.find(params[:id])
     render json: todo
+    if @authenticated_user.todos.exists?(is: params:[:id])
+      @todo = @authenticated_user.todos.find(params:id)
+    else
+      render json: {"status": 403, "message": "権限ないよ"}
+    end
   end
 
   def create
