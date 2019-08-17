@@ -1,5 +1,6 @@
 class TodosController < ApplicationController
   before_action :authenticated_user
+  before_action :user_todos, only: [:show, :update]
 
   def index
     @todos = @authenticated_user.todos.all
@@ -7,13 +8,8 @@ class TodosController < ApplicationController
   end
 
   def show
-    @todo = Todo.find(params[:id])
-    render json: todo
-    if @authenticated_user.todos.exists?(is: params:[:id])
-      @todo = @authenticated_user.todos.find(params:id)
-    else
-      render json: {"status": 403, "message": "権限ないよ"}
-    end
+    @todo = @authenticated_user.todos.find(params[:id])
+    render json: @todo
   end
 
   def create
@@ -25,11 +21,31 @@ class TodosController < ApplicationController
     end
   end
 
+  def update
+    @todo = Todo.find(params[:id])
+    if @todo.update(todo_params)
+      render json: {"status": 200, "message": "タスクを更新しました"}
+    else
+      render json: {status: 400, message: @todo.errors.full_messages}
+    end
+  end
+
     private
 
+    def user_todos
+      unless @authenticated_user.todos.exists?(id: params[:id])
+        render jdon: {"status": 403, "message": "権限ないよ"}
+      end
+    end
+
     def todo_params
-      raw_parameters = {title: params[:title], description: params[:description], user_id: @authenticated_user.id}
+      raw_parameters = {
+        title: params[:title],
+        description: params[:description],
+        status: params[:status],
+        user_id: @authenticated_user.id
+      }
       parameters = ActionContoller::Parameters.new(raw_parameters)
-      parameters.permit(:title, :description, :user_id)
+      parameters.permit(:title, :description, :status, :user_id)
     end
 end
